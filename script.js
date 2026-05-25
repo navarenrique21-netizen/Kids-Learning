@@ -46,7 +46,7 @@ function setActiveLevel(index) {
 }
 
 function nextWord() {
-  const wordList = levels[activeLevel].words;
+  const wordList = levels[activeLevel].numbers ? levels[activeLevel].numbers : levels[activeLevel].words;
   currentWord = wordList[Math.floor(Math.random() * wordList.length)];
   currentAnswer = '';
   targetWordEl.textContent = '?';
