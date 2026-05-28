@@ -1,4 +1,5 @@
 # Kids Learning
+A simple interactive web app to help children learn 2-letter words and gradually grow into longer words.
 
 ## Files
 
@@ -9,12 +10,16 @@
 ## How to use
 
 1. Open `index.html` in a browser.
+2. Choose a lesson: `2 letters`, `3 letters`, `4 letters`, or `5+ letters`.
+3. Tap the letter buttons to spell the scrambled word.
+4. Use the hint or Hear Word button if you need help.
+5. Tap Next Word to practice more words and keep learning.
 
 ## Features
 
-- Beginner mode with 2-3 letter words
-- Growing mode with 4-letter practice
-- More Words mode for longer words
-- Letter-building exercise with instant feedback
-- Speech synthesis for hearing the word aloud
+- 2-letter starter lesson for early readers
+- 3-letter and 4-letter lessons for growth
+- 5+ letter lesson for continued word building
+- Letter selection game with clear feedback
+- Spoken word help using browser speech synthesis
 
