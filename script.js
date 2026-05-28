@@ -1,128 +1,109 @@
-const levels = [
-  {
-    name: 'Beginner',
-    description: 'Start with 2-3 letter words.',
-    words: ['cat', 'dog', 'sun', 'hat', 'pig', 'bat', 'top', 'red', 'run', 'box']
-  },
-  {
-    name: 'Growing',
-    description: 'Move to 4-letter words and practice new sounds.',
-    words: ['play', 'jump', 'time', 'boat', 'food', 'book', 'rain', 'cold', 'fish', 'bell']
-  },
-  {
-    name: 'More Words',
-    description: 'Try longer words and keep building reading confidence.',
-    words: ['happy', 'apple', 'house', 'water', 'train', 'smile', 'sleep', 'light', 'bread', 'green']
-  }
-];
-
-const targetWordEl = document.getElementById('targetWord');
-const letterButtonsEl = document.getElementById('letterButtons');
-const answerDisplayEl = document.getElementById('answerDisplay');
-const messageEl = document.getElementById('message');
-const scoreEl = document.getElementById('score');
-const levelDescriptionEl = document.getElementById('levelDescription');
-const levelButtons = document.querySelectorAll('.level-btn');
-
-let activeLevel = 0;
-let currentWord = '';
-let currentAnswer = '';
-let score = 0;
-
-function shuffle(array) {
-  return array.slice().sort(() => Math.random() - 0.5);
+/* Kids Learning - clean, kid-friendly */
+const styleContent = `
+:root {
+  --bg: #f7f9fc;
+  --card: #ffffff;
+  --primary: #4f7cff;
+  --accent: #ffb347;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --success: #22c55e;
 }
-
-function setActiveLevel(index) {
-  activeLevel = index;
-  score = 0;
-  scoreEl.textContent = score;
-  levelButtons.forEach((button, idx) => {
-    button.classList.toggle('active', idx === index);
-  });
-  levelDescriptionEl.textContent = levels[index].description;
-  messageEl.textContent = '';
-  nextWord();
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 16px;
 }
-
-function nextWord() {
-  const wordList = levels[activeLevel].numbers ? levels[activeLevel].numbers : levels[activeLevel].words;
-  currentWord = wordList[Math.floor(Math.random() * wordList.length)];
-  currentAnswer = '';
-  targetWordEl.textContent = '?';
-  answerDisplayEl.textContent = '';
-  messageEl.textContent = '';
-  renderLetters();
+.app {
+  width: 100%;
+  max-width: 720px;
 }
-
-function renderLetters() {
-  const letters = shuffle(currentWord.split(''));
-  letterButtonsEl.innerHTML = '';
-  letters.forEach((letter, index) => {
-    const button = document.createElement('button');
-    button.textContent = letter.toUpperCase();
-    button.className = 'letter-btn';
-    button.type = 'button';
-    button.addEventListener('click', () => addLetter(letter, button));
-    letterButtonsEl.appendChild(button);
-  });
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
-
-function addLetter(letter, button) {
-  if (currentAnswer.length >= currentWord.length) return;
-  currentAnswer += letter;
-  answerDisplayEl.textContent = currentAnswer.toUpperCase();
-  button.disabled = true;
+h1 { font-size: 1.4rem; margin: 0; }
+.stats { display: flex; gap: 12px; font-size: 0.9rem; color: var(--muted); }
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
 }
-
-function clearAnswer() {
-  currentAnswer = '';
-  answerDisplayEl.textContent = '';
-  document.querySelectorAll('.letter-btn').forEach((btn) => {
-    btn.disabled = false;
-  });
-  messageEl.textContent = '';
+.levels { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.level-btn {
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
 }
-
-function checkAnswer() {
-  if (!currentAnswer) {
-    messageEl.textContent = 'Try building the word first.';
-    return;
-  }
-
-  if (currentAnswer.toLowerCase() === currentWord) {
-    targetWordEl.textContent = currentWord.toUpperCase();
-    score += 1;
-    scoreEl.textContent = score;
-    messageEl.textContent = 'Great job! That word is correct. Tap Next to keep learning.';
-    speakWord(currentWord);
-  } else {
-    messageEl.textContent = 'Almost there! Check the letters and try again.';
-  }
+.level-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }
-
-function showHint() {
-  targetWordEl.textContent = currentWord[0].toUpperCase() + ' ' + '_'.repeat(currentWord.length - 1);
-  messageEl.textContent = 'Here is the first letter. Keep going!';
+.target {
+  font-size: 3rem;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.2em;
+  margin: 12px 0;
 }
-
-function speakWord(word) {
-  if (!window.speechSynthesis) return;
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.rate = 0.9;
-  window.speechSynthesis.speak(utterance);
+.answer {
+  min-height: 48px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
 }
+.letters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.letter-btn {
+  padding: 14px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  background: #eef2ff;
+  cursor: pointer;
+}
+.letter-btn:disabled { opacity: 0.4; }
+.controls { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.controls button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #f3f4f6;
+  font-weight: 600;
+  cursor: pointer;
+}
+.controls button.primary { background: var(--primary); color: white; }
+.message { min-height: 24px; text-align: center; color: var(--muted); margin-top: 8px; }
+.footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.lang-toggle { border: none; background: var(--accent); color: #1f2937; padding: 6px 10px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+@media (max-width: 480px) {
+  .controls { grid-template-columns: repeat(3, 1fr); }
+}
+`;
 
-document.getElementById('submitBtn').addEventListener('click', checkAnswer);
-document.getElementById('clearBtn').addEventListener('click', clearAnswer);
-document.getElementById('hintBtn').addEventListener('click', showHint);
-document.getElementById('sayBtn').addEventListener('click', () => speakWord(currentWord));
-document.getElementById('nextBtn').addEventListener('click', nextWord);
-
-levelButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    setActiveLevel(Number(button.dataset.level));
-  });
-});
-
-setActiveLevel(activeLevel);
+const styleTag = document.createElement('style');
+styleTag.textContent = styleContent;
+document.head.appendChild(styleTag);
