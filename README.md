@@ -1,6 +1,4 @@
 # Kids Learning
-2 to 3 letter words
-A simple interactive web app to help children learn to read short words and then progress to longer words.
 
 ## Files
 
@@ -11,10 +9,6 @@ A simple interactive web app to help children learn to read short words and then
 ## How to use
 
 1. Open `index.html` in a browser.
-2. Choose a level: Beginner, Growing, or More Words.
-3. Tap the letter buttons to build the word.
-4. Check the answer and use hints or audio as needed.
-5. Tap Next Word to practice more words.
 
 ## Features
 
